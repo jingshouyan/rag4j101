@@ -40,7 +40,11 @@ public class RagService {
     public RagService(ChatClient.Builder chatClientBuilder, VectorStore vectorStore) {
         this.chatClient = chatClientBuilder.build();
         this.vectorStore = vectorStore;
-        this.splitter = new TokenTextSplitter(500, 100, 1000, 80, true, List.of('.', '!', '?', '\n'));
+        this.splitter = TokenTextSplitter.builder()
+                .withChunkSize(500)
+                .withMinChunkSizeChars(100)
+                .withPunctuationMarks(List.of('.', '!', '?', '\n'))
+                .build();
     }
 
     // ──────────────────────────────
