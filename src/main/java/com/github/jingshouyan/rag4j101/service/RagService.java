@@ -95,13 +95,17 @@ public class RagService {
     // ──────────────────────────────
 
     /**
-     * Ask a question using RAG — the {@code QuestionAnswerAdvisor} registered in
-     * {@link com.github.jingshouyan.rag4j101.config.RagConfig} automatically
-     * retrieves relevant chunks from Qdrant and augments the prompt.
+     * Ask a question with multi-turn conversation support.
+     *
+     * @param question       the user's question
+     * @param conversationId identifies the conversation session;
+     *                       reuse the same ID across calls for multi-turn context
+     * @return the generated answer
      */
-    public String ask(String question) {
+    public String ask(String question, String conversationId) {
         return chatClient.prompt()
                 .user(question)
+                .advisors(spec -> spec.param("chat_memory_conversation_id", conversationId))
                 .call()
                 .content();
     }

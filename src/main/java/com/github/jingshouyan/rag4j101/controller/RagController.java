@@ -61,10 +61,11 @@ public class RagController {
     @PostMapping("/query")
     public ResponseEntity<QueryResponse> query(@RequestBody QueryRequest request) {
         if (request.question() == null || request.question().isBlank()) {
-            return ResponseEntity.badRequest().body(new QueryResponse("Question must not be empty"));
+            return ResponseEntity.badRequest().body(new QueryResponse("Question must not be empty", null));
         }
-        String answer = ragService.ask(request.question());
-        return ResponseEntity.ok(new QueryResponse(answer));
+        String convId = request.conversationId() != null ? request.conversationId() : java.util.UUID.randomUUID().toString();
+        String answer = ragService.ask(request.question(), convId);
+        return ResponseEntity.ok(new QueryResponse(answer, convId));
     }
 
     @GetMapping("/health")
